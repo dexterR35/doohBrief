@@ -1,0 +1,384 @@
+{
+  "_comment": "Bundled fallback brief (copy/slug). Text and structure only — stills/banner/character refs load from public.dooh_brief_media, not from filenames here.",
+  "assetBasePath": "/dooh",
+  "briefs": [
+    {
+      "slug": "netbet-dooh-bucharest",
+      "listTitle": "NetBet · Queen Elisabeth Blvd",
+      "listBadge": "DOOH",
+      "bannerLabel": "NetBet · DOOH · Queen Elisabeth Boulevard · Bucharest · 10s",
+      "headerPill": "Live production brief",
+      "tags": [
+        "DOOH",
+        "10s · Loop-ready",
+        "Queen Elisabeth Blvd · Bucharest"
+      ],
+      "title": "TRĂIEȘTE MOMENTUL",
+      "subtitle": "NetBet — Full DOOH production brief",
+      "introHtml": "A cinematic build from <b>controlled presence → ignition → explosive motion → brand clarity</b>. The film follows a confident female rider whose calm, deliberate energy transforms into a high-intensity ride, leaving behind a stylized trail of rewards that resolves into the NetBet universe.",
+      "creativeArc": [
+        "Attraction",
+        "Tension",
+        "Trigger",
+        "Release",
+        "Resolution"
+      ],
+      "formatRows": [
+        {
+          "key": "Format",
+          "value": "DOOH · Digital Out-of-Home"
+        },
+        {
+          "key": "Duration",
+          "value": "10.0 seconds · loop-friendly"
+        },
+        {
+          "key": "Attention window",
+          "value": "Must capture within first 1–2 seconds"
+        },
+        {
+          "key": "Readability",
+          "value": "Peripheral vision - no fine print"
+        },
+        {
+          "key": "Location",
+          "value": "Queen Elisabeth Boulevard · Bucharest"
+        },
+        {
+          "key": "Loop transition",
+          "value": "Scene 7 red glow fades into wet-asphalt reflection of Scene 1"
+        },
+        {
+          "key": "Vertical",
+          "value": "General"
+        },
+        {
+          "key": "Camera notes",
+          "value": "<p><b>Cinematic camera</b> — Soft cinematic side-key, subtle rim. Smooth gimbal, controlled motion. No handheld shake unless specified.</p><p><b>Billboard / outro</b> — Locked-off or minimal micro-movement for outro. High readability, dominant logo, rotating promo line acceptable.</p>"
+        }
+      ],
+      "characterRefs": [
+        {
+          "id": "cr1",
+          "image": "",
+          "label": "Character ref · Full body"
+        },
+        {
+          "id": "cr2",
+          "image": "",
+          "label": "Character ref · Close-up"
+        },
+        {
+          "id": "cr3",
+          "image": "",
+          "label": "Character ref · Alt angle"
+        }
+      ],
+      "characterRows": [
+        {
+          "key": "Gender",
+          "value": "Female"
+        },
+        {
+          "key": "Type",
+          "value": "Confident female rider - brunette, slim athletic build (28–30 years old) high-end commercial model appearance"
+        },
+        {
+          "key": "Traits",
+          "value": "Confident · calm · in control · stylish"
+        },
+        {
+          "key": "Wardrobe",
+          "value": "Fitted matte-black full-body suit. Clean silhouette, no logos."
+        },
+        {
+          "key": "Accessories",
+          "value": "Glossy red high-heeled stilettos - the single warm accent element. Visual echo of brand red.<br/><br/>Matte-black helmet held right hand, relaxed and low - chin bar grip, visor open",
+          "hot": true
+        },
+        {
+          "key": "Movement",
+          "value": "Even steps · no exaggeration · natural posture"
+        },
+        {
+          "key": "Post-helmet",
+          "value": "No facial expression · energy shifts to body mechanics"
+        }
+      ],
+      "overviewNav": [
+        {
+          "group": "Overview",
+          "links": [
+            {
+              "id": "overview",
+              "label": "Creative direction"
+            },
+            {
+              "id": "format",
+              "label": "Format & specs"
+            },
+            {
+              "id": "character",
+              "label": "Character"
+            }
+          ]
+        },
+        {
+          "group": "Storyboard",
+          "links": [
+            {
+              "id": "storyboard",
+              "label": "All scenes"
+            }
+          ]
+        }
+      ],
+      "scenes": [
+        {
+          "id": "s1",
+          "num": "01",
+          "code": "S1",
+          "title": "Walk-in · Controlled presence",
+          "time": "0.0 – 1.2s",
+          "lens": "35mm",
+          "hot": false,
+          "image": {
+            "placeholder": true,
+            "phLabel": "Walk-in",
+            "phHint": "Upload reference still",
+            "badge": "Reference still",
+            "corners": true
+          },
+          "intentHtml": "<b>Rear tracking · full body · low angle.</b> Immediate visual hook with controlled presence.",
+          "prompts": {
+            "video": "Cinematic rear dolly-track, 35mm, low angle. Subject walks with purpose.",
+            "still": "Cinematic still, 35mm, shallow DOF. Same subject and environment.",
+            "negativeVideo": "no smile · no neon · no cyberpunk · no shaky cam",
+            "negativeStill": "no smile · no heavy retouching"
+          }
+        },
+        {
+          "id": "s2",
+          "num": "02",
+          "code": "S2",
+          "title": "Close-up · Calm before ignition",
+          "time": "1.2 – 2.2s",
+          "lens": "85mm",
+          "hot": false,
+          "image": {
+            "placeholder": true,
+            "phLabel": "Close-up",
+            "phHint": "Upload reference still",
+            "badge": "Reference still · Close-up",
+            "corners": true
+          },
+          "intentHtml": "<b>Chest-up · 3/4 · subtle push-in.</b> Pause before action.",
+          "prompts": {
+            "video": "Cinematic chest-up close-up, 85mm. Calm focused expression.",
+            "still": "Cinematic close-up still, 85mm, shallow DOF.",
+            "negativeVideo": "no smile · no exaggerated emotion",
+            "negativeStill": "no heavy retouching"
+          }
+        },
+        {
+          "id": "s3",
+          "num": "03",
+          "code": "S3",
+          "title": "Rapid ignition · Game on",
+          "time": "2.2 – 3.8s",
+          "lens": "35 / 50 / 85mm",
+          "hot": true,
+          "image": {
+            "placeholder": true,
+            "phLabel": "Rapid ignition",
+            "phHint": "Add reference still",
+            "badge": "Reference pending",
+            "corners": true
+          },
+          "intentHtml": "<b>Ultra-fast micro-montage.</b> The \"game on\" trigger.",
+          "prompts": {
+            "video": "Sequence of tight shots: helmet, visor, throttle, engine.",
+            "still": "Close-up still, visor and hands, macro detail.",
+            "negativeVideo": "no random cuts · no shaky cam",
+            "negativeStill": "no fantasy lighting"
+          }
+        },
+        {
+          "id": "s4",
+          "num": "04",
+          "code": "S4",
+          "title": "Power takeoff",
+          "time": "3.8 – 5.8s",
+          "lens": "28–35mm",
+          "hot": false,
+          "image": {
+            "placeholder": true,
+            "phLabel": "Power takeoff",
+            "phHint": "Upload environment ref",
+            "badge": "Environment ref",
+            "corners": true
+          },
+          "intentHtml": "<b>Low-angle tracking · camera accelerates with subject.</b>",
+          "prompts": {
+            "video": "Cinematic low-angle tracking. Launch and speed.",
+            "still": "Cinematic still, low angle, wet road reflections.",
+            "negativeVideo": "no chaotic motion",
+            "negativeStill": "no cartoon effects"
+          }
+        },
+        {
+          "id": "s5",
+          "num": "05",
+          "code": "S5",
+          "title": "Reward trail · System activation",
+          "time": "5.8 – 7.8s",
+          "lens": "35mm + 85mm",
+          "hot": false,
+          "image": {
+            "placeholder": true,
+            "phLabel": "Reward trail",
+            "phHint": "Generate side tracking ref",
+            "badge": "Visual pending",
+            "corners": true
+          },
+          "intentHtml": "<b>Side-tracking · motion field · rewards attached to motion.</b>",
+          "prompts": {
+            "video": "Stable side-tracking, motion blur city, energy trail.",
+            "still": "Still with motion blur and UI cards along motion vector.",
+            "negativeVideo": "no random floating UI",
+            "negativeStill": "no cartoon trails"
+          }
+        },
+        {
+          "id": "s6",
+          "num": "06",
+          "code": "S6",
+          "title": "Collapses into identity",
+          "time": "7.8 – 8.8s",
+          "lens": "35mm → push-in",
+          "hot": false,
+          "image": {
+            "placeholder": true,
+            "phLabel": "Convergence",
+            "phHint": "Vortex / compression ref",
+            "badge": "Visual pending",
+            "corners": true
+          },
+          "intentHtml": "<b>Visual compression before brand reveal.</b>",
+          "prompts": {
+            "video": "Center-locked shot, elements converge inward.",
+            "still": "Symmetrical composition, inward bending trails.",
+            "negativeVideo": "no hard cut into scene",
+            "negativeStill": "no chaotic motion"
+          }
+        },
+        {
+          "id": "s7",
+          "num": "07",
+          "code": "S7",
+          "title": "Brand outro · Tagline",
+          "time": "8.8 – 10.0s",
+          "lens": "85mm · locked off",
+          "hot": true,
+          "image": {
+            "layout": "split",
+            "left": {
+              "contain": true,
+              "badge": "Actual DOOH design ref",
+              "corners": true
+            },
+            "compositionRows": [
+              {
+                "key": "Center",
+                "value": "Logo - dominant, large, soft glow halo"
+              },
+              {
+                "key": "Top bar",
+                "value": "Rotating: PROMO LINE A · PROMO LINE B · PLAY RESPONSIBLY"
+              },
+              {
+                "key": "Bottom",
+                "value": "TAGLINE - fixed · bold · high readability"
+              },
+              {
+                "key": "BG",
+                "value": "Deep black / charcoal · residual centered glow"
+              }
+            ],
+            "paletteNote": "Palette: black dominant · accent center only · white for type"
+          },
+          "intentHtml": "<b>Fully static frame · text rotation + micro logo glow.</b> Memory imprint for DOOH.",
+          "brandOutro": true
+        }
+      ],
+      "timeline": [
+        {
+          "id": "s1",
+          "label": "Walk-in",
+          "time": "0.0s",
+          "weight": 1.2,
+          "barAfter": 0.4,
+          "hot": false,
+          "hotBridge": false
+        },
+        {
+          "id": "s2",
+          "label": "Close-up",
+          "time": "1.2s",
+          "weight": 1.0000000000000002,
+          "barAfter": 0.4,
+          "hot": false,
+          "hotBridge": true
+        },
+        {
+          "id": "s3",
+          "label": "Rapid ignition",
+          "time": "2.2s",
+          "weight": 1.5999999999999996,
+          "barAfter": 0.4,
+          "hot": true,
+          "hotBridge": false
+        },
+        {
+          "id": "s4",
+          "label": "Power takeoff",
+          "time": "3.8s",
+          "weight": 2,
+          "barAfter": 0.4,
+          "hot": false,
+          "hotBridge": false
+        },
+        {
+          "id": "s5",
+          "label": "Reward trail",
+          "time": "5.8s",
+          "weight": 2,
+          "barAfter": 0.4,
+          "hot": false,
+          "hotBridge": false
+        },
+        {
+          "id": "s6",
+          "label": "Collapses into identity",
+          "time": "7.8s",
+          "weight": 1.0000000000000009,
+          "barAfter": 0.4,
+          "hot": false,
+          "hotBridge": true
+        },
+        {
+          "id": "s7",
+          "label": "Brand outro",
+          "time": "8.8s",
+          "weight": 1.1999999999999993,
+          "barAfter": 0.4,
+          "hot": true,
+          "hotBridge": false
+        }
+      ],
+      "footerLine": "NETBET — TRĂIEȘTE MOMENTUL · DOOH · 10s · Brief v2.0",
+      "footerMeta": "Queen Elisabeth Boulevard · București · 2026",
+      "timelineEndLabel": "10s"
+    }
+  ]
+}

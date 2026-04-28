@@ -1,0 +1,204 @@
+/**
+ * DOOH brief header / in-page section nav — minimal height, flat chrome.
+ */
+
+.dooh-brief-nav {
+  position: relative;
+  margin-bottom: 0;
+  padding: 0;
+  width: 100%;
+  border-radius: 10px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  box-shadow: none;
+  overflow: hidden;
+  flex-direction: column;
+        justify-content: start;
+        align-items: start;
+}
+
+.dooh-brief-nav__titles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dooh-brief-nav__eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.dooh-brief-nav__brief-name {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--ink-primary);
+}
+
+.dooh-brief-nav__rows {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.dooh-brief-nav__block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+.dooh-brief-nav__block-label {
+  margin: 0;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+}
+
+.dooh-brief-nav__rail.dooh-brief-nav__rail--wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  align-content: stretch;
+  gap: 6px;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+.dooh-brief-nav .dooh-brief-direction-tile {
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.dooh-brief-nav__divider {
+  width: 1px;
+  height: 12px;
+  flex-shrink: 0;
+  margin: 0 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--border-subtle) 15%,
+    var(--border-subtle) 85%,
+    transparent
+  );
+  opacity: 0.9;
+}
+
+.dooh-brief-nav__divider--soft {
+  opacity: 0.65;
+  margin: 0 4px;
+}
+
+.dooh-brief-nav__group-tag {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  padding: 2px 5px;
+  margin-right: 2px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+}
+
+.dooh-brief-nav__rail--wrap .dooh-brief-nav__anchor {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
+.dooh-brief-nav__anchor {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  width: 100%;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--ink-secondary);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition:
+    color 0.16s ease,
+    background-color 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.dooh-brief-nav__anchor:hover {
+  color: var(--ink-primary);
+  background: var(--hover-accent-subtle);
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.dooh-brief-nav__anchor--active {
+  color: var(--ink-primary);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--accent) 13%, var(--surface-elevated));
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border-subtle));
+}
+
+html.dark .dooh-brief-nav__anchor--active {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-deep));
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+}
+
+.dooh-brief-nav__anchor-label {
+  white-space: nowrap;
+}
+
+.dooh-brief-nav__anchor-hint {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  color: var(--ink-tertiary);
+  white-space: nowrap;
+  opacity: 0.92;
+}
+
+.dooh-brief-nav__anchor--active .dooh-brief-nav__anchor-hint {
+  color: color-mix(in srgb, var(--accent) 55%, var(--ink-tertiary));
+  opacity: 1;
+}
+
+@media (min-width: 1024px) {
+  .dooh-brief-nav {
+    position: sticky;
+    top: 0;
+    height: 100%;
+    min-height: 100%;
+    border: 0;
+    border-radius: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
