@@ -31,7 +31,6 @@ import {
   ArrowDownTrayIcon,
   PencilSquareIcon,
   PlusIcon,
-  TrashIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import {
@@ -709,7 +708,8 @@ export default function BriefDoohDetailPage() {
                   </button>
                 </div>
               </div>
-              <div className="dooh-ref-grid">
+              {brief.characterRefs?.length ? (
+                <div className="dooh-ref-grid">
                   {(brief.characterRefs ?? []).map((ref) => {
                     const url = selectCharacterRefUrl(rows, ref.id)
                     const upKey = `up-cref-${ref.id}`
@@ -736,7 +736,7 @@ export default function BriefDoohDetailPage() {
                           {deletingCharacterRefId === ref.id ? (
                             <span className="h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 border-border border-t-accent" />
                           ) : (
-                            <TrashIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                            <XMarkIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
                           )}
                         </button>
                         <DoohBriefManagedImage
@@ -778,21 +778,8 @@ export default function BriefDoohDetailPage() {
                       </div>
                     )
                   })}
-                <button
-                  type="button"
-                  className="dooh-ref-cell dooh-ref-cell--add"
-                  title="Add character image"
-                  aria-label="Add character reference image"
-                  disabled={addingCharacterRef || mediaBusy || characterRefInteractionLocked}
-                  onClick={() => addCharacterRefCard()}
-                >
-                  {addingCharacterRef ? (
-                    <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-border border-t-accent" />
-                  ) : (
-                    <PlusIcon className="h-6 w-6 shrink-0" aria-hidden />
-                  )}
-                </button>
-              </div>
+                </div>
+              ) : null}
               {editingCharacterRows || characterRowsNormalized.length ? (
                 <div className="dooh-card-table dooh-card-table--kv">
                   <table>

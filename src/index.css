@@ -2243,29 +2243,6 @@ html.dark {
     isolation: isolate;
   }
 
-  .dooh-ref-cell--add {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--ink-tertiary);
-    background: var(--surface-elevated);
-    border-style: dashed;
-    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
-  }
-
-  .dooh-ref-cell--add:hover:not(:disabled),
-  .dooh-ref-cell--add:focus-visible:not(:disabled) {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 7%, var(--surface-elevated));
-  }
-
-  .dooh-ref-cell--add:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
-  }
-
   .dooh-ref-cell:hover,
   .dooh-ref-cell:focus-within {
     z-index: 4;
@@ -2323,6 +2300,38 @@ html.dark {
 
   .dooh-character-direction-header .dooh-doc-h2 {
     margin-bottom: 0;
+  }
+
+  .dooh-char-ref-add {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin-top: 2px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-elevated);
+    color: var(--ink-tertiary);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+
+  .dooh-char-ref-add:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface-elevated));
+  }
+
+  .dooh-char-ref-add:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .dooh-char-ref-add:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .dooh-char-ref-remove {
