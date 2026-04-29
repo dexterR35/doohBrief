@@ -6,6 +6,7 @@ import Button from '../../../components/ui/Button'
 import Input from '../../../components/ui/Input'
 import DoohBriefManagedImage from './DoohBriefManagedImage.jsx'
 import {
+  ArrowDownTrayIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   CheckIcon,
@@ -14,6 +15,66 @@ import {
   TrashIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
+
+function deriveFileExtension(url, fallback = '') {
+  try {
+    const u = new URL(url, window.location.href)
+    const name = u.pathname.split('/').pop() ?? ''
+    const dot = name.lastIndexOf('.')
+    if (dot > 0 && dot < name.length - 1) return name.slice(dot)
+  } catch {
+    /* ignore */
+  }
+  return fallback ? (fallback.startsWith('.') ? fallback : `.${fallback}`) : ''
+}
+
+function DownloadMediaButton({ url, filename, label = 'Download' }) {
+  const [busy, setBusy] = useState(false)
+  if (!url) return null
+
+  async function handleDownload(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    setBusy(true)
+    try {
+      const res = await fetch(url, { credentials: 'omit' })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const blob = await res.blob()
+      const ext = deriveFileExtension(url, blob.type.split('/')[1] || '')
+      const finalName = filename ? `${filename}${ext}` : url.split('/').pop() || 'download'
+      const objectUrl = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = objectUrl
+      a.download = finalName
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(objectUrl)
+      toast.success(`${label} downloaded`)
+    } catch (e) {
+      toast.error(e?.message ?? 'Download failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleDownload}
+      disabled={busy}
+      title={label}
+      aria-label={label}
+      className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-ink-tertiary hover:text-accent hover:bg-surface-muted/60 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {busy ? (
+        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-border border-t-accent" />
+      ) : (
+        <ArrowDownTrayIcon className="h-4 w-4" aria-hidden />
+      )}
+    </button>
+  )
+}
 
 const COLLAPSE_LINE_CLAMP = 10
 
@@ -600,7 +661,14 @@ export default function DoohSceneCard({
           <div className="dooh-sc-image-layout__aside">
             {compositionRows.length ? (
               <>
-                <div className="dooh-sc-ptxt-label">Composition</div>
+                <div className="dooh-sc-ptxt-label flex items-center justify-between gap-2">
+                  <span>Composition</span>
+                  <DownloadMediaButton
+                    url={mainHeroUrl()}
+                    filename={`${scene.code ?? scene.id}-image`}
+                    label="Download image"
+                  />
+                </div>
                 <div className="dooh-card-table dooh-card-table--kv">
                   <table>
                     <tbody>
@@ -652,7 +720,14 @@ export default function DoohSceneCard({
               </div>
               {finalVideo ? (
                 <div style={{ marginBottom: 14 }}>
-                  <div className="dooh-sc-ptxt-label">Final video (uploaded)</div>
+                  <div className="dooh-sc-ptxt-label flex items-center justify-between gap-2">
+                    <span>Final video (uploaded)</span>
+                    <DownloadMediaButton
+                      url={finalVideo}
+                      filename={`${scene.code ?? scene.id}-final-video`}
+                      label="Download video"
+                    />
+                  </div>
                   {briefSlug ? (
                     <DoohBriefManagedImage
                       className="w-full [&_video]:block [&_video]:max-h-[320px] [&_video]:w-full [&_video]:rounded-lg [&_video]:border [&_video]:border-border"
@@ -750,7 +825,14 @@ export default function DoohSceneCard({
               </div>
               {briefSlug ? (
                 <div style={{ marginBottom: 14 }}>
-                  <div className="dooh-sc-ptxt-label">Scene image</div>
+                  <div className="dooh-sc-ptxt-label flex items-center justify-between gap-2">
+                    <span>Scene image</span>
+                    <DownloadMediaButton
+                      url={stillDisplayUrl}
+                      filename={`${scene.code ?? scene.id}-scene-image`}
+                      label="Download image"
+                    />
+                  </div>
                   <DoohBriefManagedImage
                     className="w-full rounded-lg border border-(--border-subtle) bg-(--surface-deep)"
                     inputId={`dooh-final-still-${uid}`}
