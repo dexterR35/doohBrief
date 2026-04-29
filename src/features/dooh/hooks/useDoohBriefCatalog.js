@@ -3,7 +3,7 @@ import { supabase } from '../../../lib/supabase'
 import doohConstants from '../constants.json'
 import { normalizeDoohBriefSlug } from '../doohBriefSlug.js'
 import { findBriefBySlug, mergeDoohBriefCatalog } from '../briefUtils'
-import { mapBriefSlugToBannerUrl } from './useDoohBriefMedia'
+import { mapBriefSlugToFirstSceneUrl } from './useDoohBriefMedia'
 
 export function useDoohBriefsFromDb() {
   const [rows, setRows] = useState([])
@@ -39,38 +39,46 @@ export function useDoohBriefIndexEntries() {
   const staticBriefs = doohConstants.briefs ?? []
   const staticAsset = String(doohConstants.assetBasePath || '/dooh').replace(/\/$/, '') || '/dooh'
   const { rows, loading, error, refresh: refreshDb } = useDoohBriefsFromDb()
-  const [bannerBySlug, setBannerBySlug] = useState({})
-  const [bannerErr, setBannerErr] = useState(null)
+  const [mediaRows, setMediaRows] = useState([])
+  const [mediaErr, setMediaErr] = useState(null)
 
-  const loadBanners = useCallback(async () => {
-    setBannerErr(null)
+  const loadMedia = useCallback(async () => {
+    setMediaErr(null)
     const { data, error: qErr } = await supabase
       .from('dooh_brief_media')
       .select('*')
-      .eq('kind', 'banner')
+      .in('kind', ['scene_main_image', 'final_still'])
       .order('created_at', { ascending: false })
     if (qErr) {
-      setBannerErr(qErr.message)
-      setBannerBySlug({})
+      setMediaErr(qErr.message)
+      setMediaRows([])
       return
     }
-    setBannerBySlug(mapBriefSlugToBannerUrl(data ?? []))
+    setMediaRows(data ?? [])
   }, [])
 
   useEffect(() => {
-    loadBanners()
-  }, [loadBanners])
+    loadMedia()
+  }, [loadMedia])
 
   const refresh = useCallback(async () => {
     await refreshDb()
-    await loadBanners()
-  }, [refreshDb, loadBanners])
+    await loadMedia()
+  }, [refreshDb, loadMedia])
 
   const entries = useMemo(
     () => mergeDoohBriefCatalog(staticBriefs, staticAsset, rows),
     [staticBriefs, staticAsset, rows],
   )
-  const combinedError = error || bannerErr
+  const bannerBySlug = useMemo(() => {
+    const firstSceneIdBySlug = {}
+    for (const e of entries) {
+      const firstId = e.brief?.scenes?.[0]?.id
+      if (firstId) firstSceneIdBySlug[normalizeDoohBriefSlug(e.slug)] = firstId
+    }
+    return mapBriefSlugToFirstSceneUrl(mediaRows, firstSceneIdBySlug)
+  }, [mediaRows, entries])
+  const combinedError = error || mediaErr
   return { entries, loading, error: combinedError, refresh, bannerBySlug }
 }
 

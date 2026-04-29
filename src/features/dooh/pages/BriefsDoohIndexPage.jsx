@@ -71,7 +71,7 @@ export default function BriefsDoohIndexPage() {
             </div>
           ) : null}
 
-          <div className="grid w-full max-w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="flex w-full max-w-full flex-col gap-4">
             {entries.map((entry) => {
               const { brief, slug, source } = entry
               const img = bannerBySlug[normalizeDoohBriefSlug(slug)] ?? null
@@ -84,12 +84,15 @@ export default function BriefsDoohIndexPage() {
                     className="group block rounded-[14px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     <Card padding="none">
-                      <div className="h-36 bg-cover bg-top " style={img ? { backgroundImage: `url(${img})` } : undefined} />
+                      <div
+                        className="h-56 sm:h-72 bg-cover bg-center bg-surface-elevated"
+                        style={img ? { backgroundImage: `url(${img})` } : undefined}
+                      />
                       <div className="card--padded space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 space-y-0.5 flex-1">
                             <p className="font-mono text-[9px] uppercase tracking-wider text-ink-tertiary mb-1">Brief</p>
-                            <h2 className="card-header__title text-sm font-semibold leading-snug line-clamp-2">{brief.listTitle ?? brief.title}</h2>
+                            <h2 className="card-header__title text-base font-semibold leading-snug">{brief.listTitle ?? brief.title}</h2>
                           </div>
                           <div className="flex flex-wrap gap-1 shrink-0 justify-end">
                             {source === 'db' ? (
@@ -104,7 +107,7 @@ export default function BriefsDoohIndexPage() {
                             {brief.listBadge ? <Badge variant="gray">{brief.listBadge}</Badge> : null}
                           </div>
                         </div>
-                        <p className="card-header__subtitle text-xs leading-relaxed text-ink-tertiary line-clamp-2">{brief.subtitle}</p>
+                        <p className="card-header__subtitle text-xs leading-relaxed text-ink-tertiary">{brief.subtitle}</p>
                         <span className="text-accent text-sm font-semibold inline-flex items-center gap-1">
                           Open brief <span aria-hidden>→</span>
                         </span>

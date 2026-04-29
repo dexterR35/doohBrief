@@ -52,20 +52,29 @@ export function bannerHasUploadedOverride(rows) {
   )
 }
 
-/** Latest banner public URL per normalized brief slug (for index cards). */
-export function mapBriefSlugToBannerUrl(allRows) {
-  const bySlug = {}
+/**
+ * Pick scene-1 image per brief slug for index cards.
+ * Prefers the first scene's `scene_main_image`, falling back to its `final_still`.
+ */
+export function mapBriefSlugToFirstSceneUrl(allRows, firstSceneIdBySlug) {
+  const bestByKind = {}
   for (const row of allRows ?? []) {
-    if (row.kind !== 'banner' || !row.brief_slug) continue
+    if (row.kind !== 'scene_main_image' && row.kind !== 'final_still') continue
+    if (!row.brief_slug || !row.scene_id) continue
     const slug = normalizeDoohBriefSlug(row.brief_slug)
     if (!slug) continue
-    if (!bySlug[slug]) bySlug[slug] = []
-    bySlug[slug].push(row)
+    const wantedSceneId = firstSceneIdBySlug?.[slug]
+    if (!wantedSceneId || row.scene_id !== wantedSceneId) continue
+    if (!bestByKind[slug]) bestByKind[slug] = {}
+    const cur = bestByKind[slug][row.kind]
+    if (!cur || new Date(row.created_at) > new Date(cur.created_at)) {
+      bestByKind[slug][row.kind] = row
+    }
   }
   const map = {}
-  for (const [slug, rows] of Object.entries(bySlug)) {
-    const u = selectBannerUrl(rows)
-    if (u) map[slug] = u
+  for (const [slug, kinds] of Object.entries(bestByKind)) {
+    const winner = kinds.scene_main_image ?? kinds.final_still
+    if (winner) map[slug] = publicUrlForPath(winner.storage_path)
   }
   return map
 }
