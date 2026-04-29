@@ -1,11 +1,121 @@
-import { useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { deleteDoohBriefMediaBySlot, uploadDoohBriefFile } from '../doohUpload'
 import { toast } from '../../../lib/toast'
 import Badge from '../../../components/ui/Badge'
 import Button from '../../../components/ui/Button'
 import Input from '../../../components/ui/Input'
 import DoohBriefManagedImage from './DoohBriefManagedImage.jsx'
-import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CheckIcon,
+  PencilSquareIcon,
+  Square2StackIcon,
+  TrashIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline'
+
+const COLLAPSE_LINE_CLAMP = 10
+
+function CollapsiblePrompt({ text, className = '' }) {
+  const [expanded, setExpanded] = useState(false)
+  const [overflows, setOverflows] = useState(false)
+  const ref = useRef(null)
+
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    setOverflows(el.scrollHeight - el.clientHeight > 1)
+  }, [text])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const el = ref.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(() => {
+      if (expanded) return
+      setOverflows(el.scrollHeight - el.clientHeight > 1)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [expanded])
+
+  const collapsedStyle = expanded
+    ? undefined
+    : {
+        display: '-webkit-box',
+        WebkitLineClamp: COLLAPSE_LINE_CLAMP,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+      }
+
+  return (
+    <div className={className}>
+      <div ref={ref} className="dooh-sc-ptxt dooh-sc-ptxt--full" style={collapsedStyle}>
+        {text}
+      </div>
+      {overflows ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            setExpanded((prev) => !prev)
+          }}
+          className="mt-1 inline-flex cursor-pointer items-center gap-1 text-xs text-accent hover:opacity-80 transition-opacity"
+          aria-expanded={expanded}
+        >
+          {expanded ? (
+            <>
+              <ChevronUpIcon className="h-3.5 w-3.5" aria-hidden />
+              <span>Show less</span>
+            </>
+          ) : (
+            <>
+              <ChevronDownIcon className="h-3.5 w-3.5" aria-hidden />
+              <span>Show more</span>
+            </>
+          )}
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
+function CopyPromptButton({ text, label }) {
+  const [copied, setCopied] = useState(false)
+  const value = String(text ?? '').trim()
+  if (!value) return null
+
+  async function handleCopy(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopied(true)
+      toast.success(`${label} copied`)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      toast.error('Copy failed')
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      title={`Copy ${label.toLowerCase()}`}
+      aria-label={`Copy ${label.toLowerCase()}`}
+      className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-ink-tertiary hover:text-accent hover:bg-surface-muted/60 transition-colors"
+    >
+      {copied ? (
+        <CheckIcon className="h-4 w-4" aria-hidden />
+      ) : (
+        <Square2StackIcon className="h-4 w-4" aria-hidden />
+      )}
+    </button>
+  )
+}
 
 function Corners() {
   return (
@@ -570,7 +680,10 @@ export default function DoohSceneCard({
                   )}
                 </div>
               ) : null}
-              <div className="dooh-sc-ptxt-label">Video prompt</div>
+              <div className="dooh-sc-ptxt-label flex items-center justify-between gap-2">
+                <span>Video prompt</span>
+                {!editingVideoPrompts ? <CopyPromptButton text={p.video} label="Video prompt" /> : null}
+              </div>
               {editingVideoPrompts ? (
                 <Input
                   as="textarea"
@@ -578,9 +691,14 @@ export default function DoohSceneCard({
                   onChange={(e) => setVideoDraft((prev) => ({ ...prev, video: e.target.value }))}
                 />
               ) : (
-                <div className="dooh-sc-ptxt dooh-sc-ptxt--full">{p.video}</div>
+                <CollapsiblePrompt text={p.video} />
               )}
-              <div className="dooh-sc-ptxt-label mt-3">Negative prompt</div>
+              <div className="dooh-sc-ptxt-label mt-3 flex items-center justify-between gap-2">
+                <span>Negative prompt</span>
+                {!editingVideoPrompts ? (
+                  <CopyPromptButton text={p.negativeVideo} label="Negative video prompt" />
+                ) : null}
+              </div>
               {editingVideoPrompts ? (
                 <Input
                   as="textarea"
@@ -674,7 +792,10 @@ export default function DoohSceneCard({
                   No scene image yet.
                 </p>
               )}
-              <div className="dooh-sc-ptxt-label">Still prompt</div>
+              <div className="dooh-sc-ptxt-label flex items-center justify-between gap-2">
+                <span>Still prompt</span>
+                {!editingStillPrompts ? <CopyPromptButton text={p.still} label="Still prompt" /> : null}
+              </div>
               {editingStillPrompts ? (
                 <Input
                   as="textarea"
@@ -682,9 +803,14 @@ export default function DoohSceneCard({
                   onChange={(e) => setStillDraft((prev) => ({ ...prev, still: e.target.value }))}
                 />
               ) : (
-                <div className="dooh-sc-ptxt dooh-sc-ptxt--full">{p.still}</div>
+                <CollapsiblePrompt text={p.still} />
               )}
-              <div className="dooh-sc-ptxt-label mt-3">Negative prompt</div>
+              <div className="dooh-sc-ptxt-label mt-3 flex items-center justify-between gap-2">
+                <span>Negative prompt</span>
+                {!editingStillPrompts ? (
+                  <CopyPromptButton text={p.negativeStill} label="Negative still prompt" />
+                ) : null}
+              </div>
               {editingStillPrompts ? (
                 <Input
                   as="textarea"
