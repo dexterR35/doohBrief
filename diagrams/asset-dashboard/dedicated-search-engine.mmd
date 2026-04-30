@@ -1,0 +1,7 @@
+flowchart LR
+  DW["DW source of truth"] -->|batch or CDC| SE["Search index Meili Typesense OpenSearch"]
+  SPA["SPA"] --> API["API"]
+  API -->|text q| SE
+  SE-->|ids scores| API
+  API -->|enrich auth lineage| DW
+  API --> SPA

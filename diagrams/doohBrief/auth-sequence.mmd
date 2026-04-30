@@ -1,0 +1,23 @@
+sequenceDiagram
+  participant U as User
+  participant FE as React AuthContext
+  participant SB as Supabase Auth
+
+  Note over FE: Mount AuthProvider
+  FE->>SB: getUser()
+  SB-->>FE: user or null
+  FE->>SB: onAuthStateChange subscribe
+  SB-->>FE: session updates setUser
+
+  U->>FE: Open protected route
+  alt No user
+    FE->>U: Redirect to login
+  end
+  U->>FE: signInWithPassword LoginPage
+  FE->>SB: signInWithPassword
+  SB-->>FE: session
+  FE-->>U: Navigate to briefs
+
+  U->>FE: signOut
+  FE->>SB: signOut
+  SB-->>FE: cleared session

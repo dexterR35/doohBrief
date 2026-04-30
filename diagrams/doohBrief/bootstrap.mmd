@@ -1,0 +1,14 @@
+flowchart TB
+  subgraph browser["Browser"]
+    index["index.html + root"]
+    main["main.jsx StrictMode"]
+    app["App.jsx"]
+  end
+  index --> main --> app
+
+  app --> auth["AuthProvider Supabase session"]
+  app --> toast["ToastContainer"]
+
+  auth --> shell["AppShell"]
+  shell -->|loading| spin["Loading session"]
+  shell -->|ready| router["RouterProvider router.jsx"]

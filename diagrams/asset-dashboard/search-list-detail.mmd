@@ -1,0 +1,22 @@
+sequenceDiagram
+  participant U as User
+  participant SPA as Asset dashboard SPA
+  participant API as Authenticated API
+  participant DW as DW tables indexes MVs
+
+  Note over SPA: URL params q filters cursor no full catalog in browser
+  U->>SPA: search and filters
+  SPA->>API: GET /api/assets?q=...&cursor=...
+  API->>API: verify JWT session RBAC
+  API->>DW: parameterized query LIMIT
+  Note over DW: indexes MV slim rows
+  DW-->>API: page optional facets
+  API-->>SPA: JSON
+  SPA-->>U: virtualized list
+
+  U->>SPA: open detail
+  SPA->>API: GET /api/assets/:id
+  API->>DW: primary-key lookup
+  DW-->>API: single row
+  API-->>SPA: detail JSON
+  SPA-->>U: detail view

@@ -1,0 +1,13 @@
+flowchart TB
+  subgraph pipelines["Ingest transform"]
+    raw["Raw lake staging"]
+    etl["ETL jobs e.g. dbt pipelines"]
+  end
+  subgraph serving["Query-facing layer"]
+    base["Normalized fact dim tables"]
+    idx["Indexes or warehouse clustering on filter sort columns"]
+    mv["Materialized views flattened dashboard row"]
+  end
+  raw --> etl --> base
+  base --> idx
+  base --> mv

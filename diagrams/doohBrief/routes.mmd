@@ -1,0 +1,15 @@
+flowchart TD
+  router["React Router"]
+
+  router --> login["/login LoginPage"]
+  router --> root["/ redirect to /briefs-dooh"]
+  router --> catchall["wildcard redirect /login"]
+  router --> protected["ProtectedLayout + RequireAuth"]
+
+  protected --> list["/briefs-dooh BriefsDoohIndexPage"]
+  protected --> detail["/briefs-dooh/:briefSlug BriefDoohDetailPage"]
+
+  gate{"user in AuthContext?"}
+  protected --> gate
+  gate -->|no| redirect["Navigate /login + state.from"]
+  gate -->|yes| layout["Outlet app-shell app-main"]

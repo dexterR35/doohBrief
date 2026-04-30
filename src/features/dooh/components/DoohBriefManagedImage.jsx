@@ -24,6 +24,8 @@ export default function DoohBriefManagedImage({
   overlayVariant = 'dim',
   /** Show browser fullscreen for managed raster (img / video). */
   enableFullscreen = true,
+  /** Show the replace-file label + hidden input. */
+  enableReplace = true,
 }) {
   const wrapRef = useRef(null)
 
@@ -60,24 +62,28 @@ export default function DoohBriefManagedImage({
       {children}
       <div className={overlayCls}>
         <div className="pointer-events-auto mx-2 mb-3 flex flex-wrap items-center justify-center gap-2">
-          <label
-            htmlFor={inputId}
-            className={cn(`${ctlCls} ${idleCls} cursor-pointer`, (block || busy) && 'cursor-not-allowed opacity-60')}
-          >
-            {busy ? 'Uploading…' : label}
-          </label>
-          <input
-            id={inputId}
-            type="file"
-            accept={accept}
-            className="sr-only"
-            disabled={block || busy}
-            onChange={(e) => {
-              const f = e.target.files?.[0]
-              if (f) onPickFile?.(f)
-              e.target.value = ''
-            }}
-          />
+          {enableReplace ? (
+            <>
+              <label
+                htmlFor={inputId}
+                className={cn(`${ctlCls} ${idleCls} cursor-pointer`, (block || busy) && 'cursor-not-allowed opacity-60')}
+              >
+                {busy ? 'Uploading…' : label}
+              </label>
+              <input
+                id={inputId}
+                type="file"
+                accept={accept}
+                className="sr-only"
+                disabled={block || busy}
+                onChange={(e) => {
+                  const f = e.target.files?.[0]
+                  if (f) onPickFile?.(f)
+                  e.target.value = ''
+                }}
+              />
+            </>
+          ) : null}
           {enableFullscreen ? (
             <button
               type="button"

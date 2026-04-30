@@ -197,9 +197,7 @@ function Corners() {
  *     finalVideo?: string | null,
  *     finalStill?: string | null,
  *     sceneMainImage?: string | null,
- *     sceneMainUploaded?: boolean,
  *     splitPanelImage?: string | null,
- *     splitPanelUploaded?: boolean,
  *     finalVideoUploaded?: boolean,
  *     finalStillUploaded?: boolean,
  *   },
@@ -272,74 +270,37 @@ export default function DoohSceneCard({
     }
   }
 
-  /** Any overlay op on this scene image area */
-  const sceneImgBusy = busyKind !== null
-
   const sceneMainImage = media?.sceneMainImage
-  const sceneMainUploaded = !!media?.sceneMainUploaded
   const splitPanelImage = media?.splitPanelImage
-  const splitPanelUploaded = !!media?.splitPanelUploaded
   const finalVideo = media?.finalVideo
   const finalStill = media?.finalStill
   const finalVideoUploaded = !!media?.finalVideoUploaded
   const finalStillUploaded = !!media?.finalStillUploaded
   const uid = `${scene.id}`
 
-  /** Main raster: DB uploads only (`dooh_brief_media`). */
+  /** Main raster: Still tab is the source of truth, with legacy fallback. */
   function mainHeroUrl() {
-    return sceneMainImage ?? finalStill ?? null
+    return finalStill ?? sceneMainImage ?? null
   }
 
   /** Same asset URL as the Image tab hero — Still tab previews this only. */
   function primaryImageTabUrl() {
     if (img.layout === 'split' && img.left) {
-      return splitPanelImage ?? finalStill ?? null
+      return finalStill ?? splitPanelImage ?? null
     }
     return mainHeroUrl()
   }
 
-  /** Remove matches what is shown: scene main row, else final-still row. */
-  function removeMainHeroByDisplay() {
-    if (sceneMainImage && sceneMainUploaded) void removeUploaded('scene_main_image')
-    else if (!sceneMainImage && finalStill && finalStillUploaded) void removeUploaded('final_still')
-  }
-
-  /** Allow main panel controls while these ops run (hero + split). */
-  function isMainHeroBusyKey(k) {
-    if (!k) return false
-    return (
-      k === 'up:scene_main_image' ||
-      k === 'rm:scene_main_image' ||
-      k === 'up:final_still' ||
-      k === 'rm:final_still' ||
-      k === 'up:split_panel_image' ||
-      k === 'rm:split_panel_image'
-    )
-  }
-
   const renderMainImage = () => {
-    const canReplace = !!briefSlug
-
     if (img.layout === 'split' && img.left) {
-      const leftDisplay = splitPanelImage ?? finalStill ?? null
+      const leftDisplay = finalStill ?? splitPanelImage ?? null
       return (
         <DoohBriefManagedImage
           className={`dooh-sc-img${img.left.contain ? ' dooh-contain' : ''}`}
           style={{ maxWidth: 280, flexShrink: 0, aspectRatio: '9/16', height: 280 }}
-          inputId={`dooh-repl-${uid}-split`}
-          label={leftDisplay ? 'Replace image' : 'Add image'}
-          busy={busyKind === 'up:split_panel_image'}
-          removeBusy={busyKind === 'rm:split_panel_image'}
-          disabled={sceneImgBusy && !isMainHeroBusyKey(busyKind)}
-          showRemove={
-            canReplace &&
-            (splitPanelUploaded || (!splitPanelImage && !!finalStill && finalStillUploaded))
-          }
-          onRemove={() => {
-            if (splitPanelUploaded) removeUploaded('split_panel_image')
-            else if (!splitPanelImage && finalStill && finalStillUploaded) removeUploaded('final_still')
-          }}
-          onPickFile={(f) => upload('split_panel_image', f)}
+          enableReplace={false}
+          showRemove={false}
+          enableFullscreen={!!leftDisplay}
         >
           <Corners />
           {leftDisplay ? (
@@ -348,16 +309,12 @@ export default function DoohSceneCard({
               alt=""
               onClick={() => onMediaClick({ src: leftDisplay, alt: scene.title })}
             />
-          ) : canReplace ? (
+          ) : (
             <div className="dooh-sc-img-ph">
               <div className="ph-grid" aria-hidden />
               <span className="ph-num">{scene.code}</span>
               <span className="ph-lbl">{img.left?.phLabel ?? img.phLabel ?? scene.title ?? 'Split'}</span>
               {img.phHint ? <span className="ph-hint">{img.phHint}</span> : null}
-            </div>
-          ) : (
-            <div className="flex min-h-[160px] w-full items-center justify-center bg-surface-deep text-[10px] text-ink-tertiary">
-              No image
             </div>
           )}
           {img.left.badge ? <span className="dooh-sc-img-badge">{img.left.badge}</span> : null}
@@ -365,94 +322,28 @@ export default function DoohSceneCard({
       )
     }
 
-    if (img.placeholder) {
-      const heroPh = sceneMainImage ?? finalStill
-      if (heroPh) {
-        return (
-          <DoohBriefManagedImage
-            className="dooh-sc-img"
-            inputId={`dooh-repl-${uid}-main`}
-            label="Replace image"
-            busy={busyKind === 'up:scene_main_image' || busyKind === 'up:final_still'}
-            removeBusy={busyKind === 'rm:scene_main_image' || busyKind === 'rm:final_still'}
-            disabled={sceneImgBusy && !isMainHeroBusyKey(busyKind)}
-            showRemove={
-              canReplace &&
-              ((!!sceneMainImage && sceneMainUploaded) ||
-                (!sceneMainImage && !!finalStill && finalStillUploaded))
-            }
-            onRemove={removeMainHeroByDisplay}
-            onPickFile={(f) => upload('scene_main_image', f)}
-          >
-            <Corners />
-            <img
-              src={heroPh}
-              alt=""
-              onClick={() => onMediaClick({ src: heroPh, alt: scene.title })}
-            />
-            {img.badge ? <span className="dooh-sc-img-badge">{img.badge}</span> : null}
-          </DoohBriefManagedImage>
-        )
-      }
-
-      return (
-        <DoohBriefManagedImage
-          className="dooh-sc-img"
-          inputId={`dooh-repl-${uid}-main`}
-          label="Add or replace image"
-          busy={busyKind === 'up:scene_main_image' || busyKind === 'up:final_still'}
-          removeBusy={busyKind === 'rm:scene_main_image' || busyKind === 'rm:final_still'}
-          disabled={sceneImgBusy && !isMainHeroBusyKey(busyKind)}
-          showRemove={false}
-          onPickFile={(f) => upload('scene_main_image', f)}
-        >
-          <Corners />
-          <div className="dooh-sc-img-ph">
-            <div className="ph-grid" aria-hidden />
-            <span className="ph-num">{scene.code}</span>
-            <span className="ph-lbl">{img.phLabel}</span>
-            {img.phHint ? <span className="ph-hint">{img.phHint}</span> : null}
-          </div>
-          {img.badge ? <span className="dooh-sc-img-badge">{img.badge}</span> : null}
-        </DoohBriefManagedImage>
-      )
-    }
-
-    const fileDisplay = mainHeroUrl()
+    const heroDisplay = mainHeroUrl()
 
     return (
       <DoohBriefManagedImage
         className="dooh-sc-img"
-        inputId={`dooh-repl-${uid}-main`}
-        label={fileDisplay ? 'Replace image' : 'Add image'}
-        busy={busyKind === 'up:scene_main_image' || busyKind === 'up:final_still'}
-        removeBusy={busyKind === 'rm:scene_main_image' || busyKind === 'rm:final_still'}
-        disabled={sceneImgBusy && !isMainHeroBusyKey(busyKind)}
-        showRemove={
-          canReplace &&
-          ((!!sceneMainImage && sceneMainUploaded) ||
-            (!sceneMainImage && !!finalStill && finalStillUploaded))
-        }
-        onRemove={removeMainHeroByDisplay}
-        onPickFile={(f) => upload('scene_main_image', f)}
+        enableReplace={false}
+        showRemove={false}
+        enableFullscreen={!!heroDisplay}
       >
         <Corners />
-        {fileDisplay ? (
+        {heroDisplay ? (
           <img
-            src={fileDisplay}
+            src={heroDisplay}
             alt=""
-            onClick={() => onMediaClick({ src: fileDisplay, alt: scene.title })}
+            onClick={() => onMediaClick({ src: heroDisplay, alt: scene.title })}
           />
-        ) : canReplace ? (
+        ) : (
           <div className="dooh-sc-img-ph">
             <div className="ph-grid" aria-hidden />
             <span className="ph-num">{scene.code}</span>
             <span className="ph-lbl">{img.phLabel ?? scene.title ?? 'Scene'}</span>
             {img.phHint ? <span className="ph-hint">{img.phHint}</span> : null}
-          </div>
-        ) : (
-          <div className="flex min-h-[200px] w-full items-center justify-center bg-surface-deep text-[10px] text-ink-tertiary">
-            No image
           </div>
         )}
         {img.badge ? <span className="dooh-sc-img-badge">{img.badge}</span> : null}
@@ -477,17 +368,8 @@ export default function DoohSceneCard({
     if (words.length <= 16) return basis
     return `${words.slice(0, 16).join(' ')}...`
   }
-  const cleanSummaryLabelPrefix = (value, label) =>
-    String(value ?? '')
-      .replace(new RegExp(`^${label}\\s*:?\\s*`, 'i'), '')
-      .trim()
-  const summaryValue = ({ summary, prompt, label }) => {
-    const cleanedSummary = cleanSummaryLabelPrefix(summary, label)
-    const hasSummary = cleanedSummary.length > 0
-    const source = hasSummary ? cleanedSummary : prompt
-    const concise = summarizePrompt(source)
-    return concise || cleanedSummary || summarizePrompt(prompt)
-  }
+  const photoSummary = summarizePrompt(p.still)
+  const videoSummary = summarizePrompt(p.video)
   const mergedNegative = Array.from(
     new Set(
       [p.negativeStill, p.negativeVideo]
@@ -497,32 +379,29 @@ export default function DoohSceneCard({
         .filter(Boolean),
     ),
   ).join(' · ')
+  const isAutoRowKey = (key) => {
+    const k = String(key ?? '').toLowerCase()
+    return k === 'photo summary' || k === 'video summary' || k === 'negative'
+  }
   const baseCompositionRows = img.compositionRows?.length
-    ? img.compositionRows.map((row) => ({
-        key: row?.key ?? '',
-        value: row?.value ?? '',
-        html: true,
-      }))
+    ? img.compositionRows
+        .filter((row) => !isAutoRowKey(row?.key))
+        .map((row) => ({
+          key: row?.key ?? '',
+          value: row?.value ?? '',
+          html: true,
+        }))
     : [{ key: 'Scene', value: scene.title ?? '', html: false }]
   const compositionRows = (() => {
     const rows = [...baseCompositionRows]
-    const upsert = (key, value) => {
+    const append = (key, value) => {
       if (!String(value ?? '').trim()) return
-      const idx = rows.findIndex((row) => String(row?.key ?? '').toLowerCase() === key.toLowerCase())
-      const nextRow = { key, value, html: false }
-      if (idx >= 0) rows[idx] = nextRow
-      else rows.push(nextRow)
+      rows.push({ key, value, html: false })
     }
-    upsert(
-      'Photo summary',
-      summaryValue({ summary: p.photoSummary, prompt: p.still, label: 'photo summary' }),
-    )
-    upsert(
-      'Video summary',
-      summaryValue({ summary: p.videoSummary, prompt: p.video, label: 'video summary' }),
-    )
-    upsert('Negative', mergedNegative)
-    return rows.filter((row) => String(row.value ?? '').trim().length > 0)
+    append('Photo summary', photoSummary)
+    append('Video summary', videoSummary)
+    append('Negative', mergedNegative)
+    return rows
   })()
   const [videoDraft, setVideoDraft] = useState({
     video: p.video ?? '',
@@ -657,7 +536,24 @@ export default function DoohSceneCard({
       ) : null}
       <div className={`dooh-sc-pane${tab === 'image' ? ' dooh-active' : ''}`} role="tabpanel" hidden={tab !== 'image'}>
         <div className="dooh-sc-image-layout">
-          <div className="dooh-sc-image-layout__media">{renderMainImage()}</div>
+          <div className="dooh-sc-image-layout__media">
+            {renderMainImage()}
+            {finalVideo ? (
+              <button
+                type="button"
+                className="mt-3 block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
+                onClick={() => onMediaClick({ videoSrc: finalVideo, alt: scene.title })}
+              >
+                <video
+                  src={finalVideo}
+                  muted
+                  playsInline
+                  preload="metadata"
+                  className="w-full max-h-[240px] rounded-lg border border-(--border-subtle) bg-black object-contain"
+                />
+              </button>
+            ) : null}
+          </div>
           <div className="dooh-sc-image-layout__aside">
             {compositionRows.length ? (
               <>

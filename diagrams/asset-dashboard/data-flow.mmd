@@ -1,0 +1,5 @@
+flowchart LR
+  U["Users ~20-30"] --> FE["Asset dashboard SPA"]
+  FE --> API["Authenticated API"]
+  API --> DW["Data warehouse / serving tables"]
+  API --> OS["Object storage URLs optional"]

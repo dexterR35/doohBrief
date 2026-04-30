@@ -1,0 +1,17 @@
+flowchart LR
+  subgraph client["Browser"]
+    SPA["Dashboard SPA<br/>q filters cursor"]
+  end
+  subgraph server["API"]
+    API["Auth + RBAC"]
+  end
+  subgraph data["DW serving"]
+    IX["Tables + indexes"]
+    MV["Materialized views"]
+  end
+  SPA -->|paginated GET| API
+  API -->|SQL LIMIT| IX
+  API -->|or read| MV
+  IX --> API
+  MV --> API
+  API -->|JSON pages| SPA
