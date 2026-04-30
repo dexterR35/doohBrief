@@ -536,24 +536,7 @@ export default function DoohSceneCard({
       ) : null}
       <div className={`dooh-sc-pane${tab === 'image' ? ' dooh-active' : ''}`} role="tabpanel" hidden={tab !== 'image'}>
         <div className="dooh-sc-image-layout">
-          <div className="dooh-sc-image-layout__media">
-            {renderMainImage()}
-            {finalVideo ? (
-              <button
-                type="button"
-                className="mt-3 block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
-                onClick={() => onMediaClick({ videoSrc: finalVideo, alt: scene.title })}
-              >
-                <video
-                  src={finalVideo}
-                  muted
-                  playsInline
-                  preload="metadata"
-                  className="w-full max-h-[240px] rounded-lg border border-(--border-subtle) bg-black object-contain"
-                />
-              </button>
-            ) : null}
-          </div>
+          <div className="dooh-sc-image-layout__media">{renderMainImage()}</div>
           <div className="dooh-sc-image-layout__aside">
             {compositionRows.length ? (
               <>
